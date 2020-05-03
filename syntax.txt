@@ -1,0 +1,16 @@
+convert -help
+convert valor
+convert -baseOut base valor
+convert -baseIn base valor
+convert -baseIn base -baseOut base valor
+
+convert -file archivo1 valor
+convert -file archivo1 -baseOut base valor
+convert -file archivo1 -baseIn base valor
+convert -file archivo1 -baseIn base -baseOut base valor
+
+
+convert -file archivo1 -fileOut archivo2 valor
+convert -file archivo1 -fileOut archivo2 -baseOut base valor
+convert -file archivo1 -fileOut archivo2 -baseIn base valor
+convert -file archivo1 -fileOut archivo2 -baseIn base -baseOut base valor
