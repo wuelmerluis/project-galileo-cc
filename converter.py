@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+
 def decimal_a_binario(decimal):
     binario = ''
     dividendo = decimal
@@ -146,11 +149,6 @@ def parse_input(comando):
         print error_msg + ' (No se paso ningun parametro)'
         return None
 
-    # Si el comando es el de ayuda, retornar.
-    if (comando_partes[1] == '-help'):
-        return None
-
-
     resultado = {}
     valor_a_convertir = None
     palabra_actual = ''
@@ -244,8 +242,8 @@ def parse_input(comando):
 
     # Despues de recorrer letrar por letra...
 
-    print resultado
-    print valor_a_convertir
+    # print resultado
+    # print valor_a_convertir
 
     flags_validos = ['-baseIn', '-baseOut', '-file', '-outFile', '-help']
 
@@ -282,7 +280,7 @@ def parse_input(comando):
         print error_msg + ' (Debe especificar un valor para convertir)'
         return None
 
-    # Validar que el valor de -baseIn.
+    # Validar el valor de -baseIn.
     if (('-baseIn' in resultado) and (resultado['-baseIn'])):
         for char in resultado['-baseIn']:
             char_ascii = ord(char)
@@ -292,8 +290,14 @@ def parse_input(comando):
                 print error_msg + ' (Valor invalido para -baseIn)'
                 return None
 
-    # Validar que el valor de -baseIn.
-    if (('-baseOut' in resultado) and (resultado['-baseOut'])):
+        resultado['-baseIn'] = int(resultado['-baseIn'])
+
+        if ((resultado['-baseIn'] < 2) or (resultado['-baseIn'] > 36)):
+            print error_msg + ' (Valor invalido para -baseIn)'
+            return None
+
+    # Validar el valor de -baseIn.
+    if (('-baseOut' in resultado) and resultado['-baseOut']):
         for char in resultado['-baseOut']:
             char_ascii = ord(char)
             es_numero = ((char_ascii > 47) and (char_ascii < 58))
@@ -301,6 +305,12 @@ def parse_input(comando):
             if (not es_numero):
                 print error_msg + ' (Valor invalido para -baseOut)'
                 return None
+
+        resultado['-baseOut'] = int(resultado['-baseOut'])
+
+        if ((resultado['-baseOut'] < 2) or (resultado['-baseOut'] > 36)):
+            print error_msg + ' (Valor invalido para -baseOut)'
+            return None
 
     # Validar el valor a convertir
     if (valor_a_convertir):
@@ -313,37 +323,92 @@ def parse_input(comando):
                 print error_msg + ' (Valor invalido para convertir)'
                 return None
 
+            if (('-baseIn' in resultado) and (resultado['-baseIn'] < 10)):
+                if ((not es_numero) or (int(char) > resultado['-baseIn'] - 1)):
+                    print error_msg + ' (El valor a convertir posee caracteres no validos para -baseIn ' +  str(resultado['-baseIn']) + ')'
+                    return None
+
+            # Si no se especifica -baseIn significa que el valor es decimal
+            if ('-baseIn' not in resultado):
+                if (not es_numero):
+                    print error_msg + ' (El valor a convertir posee caracteres no validos para -baseIn 10)'
+                    return None
+
     resultado['valor_a_convertir'] = valor_a_convertir
+    # print 'Resultado final:'
+    # print resultado
 
     return resultado
 
 
+def imprimir_ayuda():
+    print 'Uso: convert [-flag <parametro>] [<input>]'
+    print 'Lista de banderas:'
+    print '    -baseIn <base de entrada> Indica en qué base está el texto o archivo de entrada. Una base válida esta en el rango de 2 a 36. Si no se coloca esta bandera en el comando entonces se asume que la base de entrada es base decimal.'
+    print '    -baseOut <base de salida> Indica a qué base se convertirá el texto o archivo de salida. Una base válida esta en el rango de 2 a 36. Si no se coloca esta bandera en el comando entonces se asume que la base de salida es base decimal.'
+    print '    -outFile <file name> Indica que la conversión se guardará en un archivo de salida, cuyo nombre será el ingresado en <file name> y con extensión ".nbc". Esta bandera debe estar presente en el comando si está la bandera -file de lo contrario no debería estar.'
+    print '    -file <file name> Indica que se debe convertir un archivo, <file name> será el path para un archivo de texto plano, sin importar la extensión. Se deben convertir todos los números encontrados en el archivo, siguiendo el mismo formato del archivo.'
+    print '    -help Muestra un listado y resumen de las banderas disponibles, adicionalmente mostrará 3 ejemplos de cómo usar las banderas y los créditos del proyecto.'
+
+
+def imprimir_creditos():
+    print '<Grupo 8BN>'
+    print '\tWuelmer Luis - 20005607'
+    print '<Grupo 8BN>'
+
+
 def main():
+    imprimir_creditos()
+
     while True:
         comando = raw_input('conversor >> ');
 
         if comando == 'quit':
             break
 
-        input_parsed = parse_input(comando)
+        parametros = parse_input(comando)
 
+        if (not parametros):
+            continue
+
+        if ('-help' in parametros):
+            imprimir_ayuda()
+
+            continue
+
+        if (not parametros['valor_a_convertir']):
+            continue
+
+        # Si no se especifica la base de entrada, por default es 10.
+        if (('-baseIn' not in parametros) or (not parametros['-baseIn'])):
+            parametros['-baseIn'] = 10
+
+        # Si no se especifica la base de salida, por default es 10.
+        if (('-baseOut' not in parametros) or (not parametros['-baseOut'])):
+            parametros['-baseOut'] = 10
+
+        # Inicialmente, el valor convertido es igual al valor ingresado.
+        valor_convertido = parametros['valor_a_convertir']
+
+        # Ejemplos de decimal a otra base:
         # binario = decimal_a_basex(2695, 2)
         # octal = decimal_a_basex(2695, 8)
         # hexadecimal = decimal_a_basex(2695, 16)
 
-        # print 'Binario: %s' % binario
-        # print 'Octal: %s' % octal
-        # print 'Hexadecimal: %s' % hexadecimal
-
-        # print '------------------------------'
-
-        # # Convertir de binario, octal y hexadecimal a decimal (78895)
+        # Ejemplos de una base x a decimal:
         # bin_a_decimal = basex_a_decimal('10011010000101111', 2)
         # oct_a_decimal = basex_a_decimal('232057', 8)
         # hex_a_decimal = basex_a_decimal('1342F', 16)
 
-        # print 'Binario a decimal: %s' % str(bin_a_decimal)
-        # print 'Octal a decimal: %s' % str(oct_a_decimal)
-        # print 'Hexadecimal a decimal: %s' % str(hex_a_decimal)
+        if (parametros['-baseIn'] != 10):
+            valor_convertido = basex_a_decimal(valor_convertido, parametros['-baseIn'])
+        else:
+            valor_convertido = int(valor_convertido)
+
+        if (parametros['-baseOut'] != 10):
+            valor_convertido = decimal_a_basex(valor_convertido, parametros['-baseOut'])
+
+        print 'Valor convertido: ' + str(valor_convertido)
+
 
 main()
