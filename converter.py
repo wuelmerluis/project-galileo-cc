@@ -106,7 +106,7 @@ def parse_input(comando):
     if comando == 'quit':
         return None
 
-    error_msg = 'ERROR! Expresion no valida'
+    error_msg = 'resultado >> ERROR! Expresion no valida'
 
     # Validar que no hayan caracteres raros en el input.
     for char in comando:
@@ -350,6 +350,8 @@ def main():
         comando = raw_input('conversor >> ');
 
         if comando == 'quit':
+            print 'Saliendo ...'
+            print 'Gracias por usar nuestro convertidor.'
             break
 
         parametros = parse_input(comando)
@@ -394,7 +396,7 @@ def main():
         if (parametros['-baseOut'] != 10):
             valor_convertido = decimal_a_basex(valor_convertido, parametros['-baseOut'])
 
-        print 'Valor convertido: ' + str(valor_convertido)
+        print 'resultado >> ' + str(valor_convertido)
 
 
 main()
