@@ -1,16 +1,15 @@
 convert -help
-convert valor
-convert -baseOut base valor
-convert -baseIn base valor
-convert -baseIn base -baseOut base valor
+convert 585
+convert -baseOut 2 585
+convert -baseIn 2 585
+convert -baseIn 2 -baseOut 2 585
 
-convert -file archivo1 valor
-convert -file archivo1 -baseOut base valor
-convert -file archivo1 -baseIn base valor
-convert -file archivo1 -baseIn base -baseOut base valor
+convert -file archivo1
+convert -file archivo1 -baseOut 2
+convert -file archivo1 -baseIn 2
+convert -file archivo1 -baseIn 2 -baseOut 2
 
-
-convert -file archivo1 -fileOut archivo2 valor
-convert -file archivo1 -fileOut archivo2 -baseOut base valor
-convert -file archivo1 -fileOut archivo2 -baseIn base valor
-convert -file archivo1 -fileOut archivo2 -baseIn base -baseOut base valor
+convert -file archivo1 -outFile archivo2
+convert -file archivo1 -outFile archivo2 -baseOut 2
+convert -file archivo1 -outFile archivo2 -baseIn 2
+convert -file archivo1 -outFile archivo2 -baseIn 2 -baseOut 2
