@@ -129,7 +129,7 @@ def parse_input(comando):
         es_caracter_especial = (str(char_ascii) in caracteres_especiales)
 
         if ((not es_mayuscula) and (not es_minuscula) and (not es_numero) and (not es_caracter_especial)):
-            print error_msg + ' (Hay un caracter invalido)'
+            print error_msg + ' (Hay un caracter inválido)'
             return None
 
     # Dividir el input por espacios y eliminar nulos.
@@ -146,7 +146,7 @@ def parse_input(comando):
 
     # Deberia haber algo mas despues del nombre del comando.
     if ((len(comando_partes) == 1) or (not comando_partes[1])):
-        print error_msg + ' (No se paso ningun parametro)'
+        print error_msg + ' (No se paso ningún parámetro)'
         return None
 
     resultado = {}
@@ -160,7 +160,6 @@ def parse_input(comando):
     # Recorrer caracter por caracter para obtener el valor de los flags y el valor a convertir.
     # Se salta los primeros 7 caracteres que corresponden a la palabra 'convert'.
     for char in comando[7:]:
-        # print 'Char: ' + char
         index += 1
 
         # Si estoy leyendo el valor de un path, solo acumular hasta que encuentre la comilla de cierre.
@@ -177,12 +176,10 @@ def parse_input(comando):
         if (char == '"'):
             # Inicio de un path
             if (not comillas):
-                # print 'Inicio de path'
                 comillas = True
                 continue
             # Fin de un path
             else:
-                # print 'Fin de path'
                 comillas = False
                 # Si ya habia un flag, la palabra acumulada es el valor de dicho flag.
                 if nombre_flag:
@@ -194,7 +191,6 @@ def parse_input(comando):
 
         # Inicio del nombre de un flag.
         if ((not flag) and (char == '-')):
-            # print 'Inicio flag'
             flag = True
 
             # Si ya habia un flag, la palabra acumulada es el valor de dicho flag.
@@ -204,46 +200,38 @@ def parse_input(comando):
 
         # Fin del nombre de un flag.
         if (flag and (char == ' ')):
-            # print 'Fin flag'
             flag = False
             nombre_flag = palabra_actual
             palabra_actual = ''
 
         palabra_actual += char
         palabra_actual = palabra_actual.strip()
-        # print 'Palabra actual: ' + palabra_actual
 
         # Si ya hay una palabra acumulada y se encuentra un espacio, significa que es el fin de un valor.
         if (palabra_actual and (char == ' ')):
-            # print 'Fin de valor'
             # Si ya habia un flag, la palabra acumulada es el valor de dicho flag.
             if nombre_flag:
                 resultado[nombre_flag] = palabra_actual
                 nombre_flag = None
                 palabra_actual = ''
             else:
-                print error_msg + ' (Parametros invalidos)'
+                print error_msg + ' (Parámetros inválidos)'
                 return None
 
         # Si ya llegue al ultimo caracter del input...
         if (index == len(comando) - 1):
-            # print 'Fin de cadena'
             if flag:
                 nombre_flag = palabra_actual or None
                 palabra_actual = ''
 
             # Si ya habia un flag, la palabra acumulada es el valor de dicho flag.
             if nombre_flag:
-                # print 'Hay un flag: ' + nombre_flag
                 resultado[nombre_flag] = palabra_actual or None
             else:
                 valor_a_convertir = palabra_actual or None
-                # print 'Valor a convertir: ' + valor_a_convertir
 
     # Despues de recorrer letrar por letra...
 
-    # print resultado
-    # print valor_a_convertir
 
     flags_validos = ['-baseIn', '-baseOut', '-file', '-outFile', '-help']
 
@@ -251,7 +239,7 @@ def parse_input(comando):
     if ('-help' in resultado):
         # No puede especificar otro flag.
         if (len(resultado) > 1):
-            print error_msg + ' (Combinacion invalida de flags)'
+            print error_msg + ' (Combinación invalida de flags)'
             return None
 
         return resultado
@@ -263,17 +251,17 @@ def parse_input(comando):
             return None
 
         if ((flag != '-help') and (not resultado[flag])):
-            print error_msg + ' (Especifico un flag sin valor)'
+            print error_msg + ' (Especificó un flag sin valor)'
             return None
 
     # Si el comando especifica un archivo, entonces no hay un valor para convertir.
     if (('-file' in resultado) and valor_a_convertir):
-        print error_msg + ' (No puede especificar un valor para convertir porque especifico un archivo)'
+        print error_msg + ' (No puede especificar un valor para convertir porque especificó un archivo)'
         return None
 
     # Si se especifica -outFile pero no se especifica -file, hay error.
     if (('-outFile' in resultado) and (('-file' not in resultado) or (not resultado['-file']))):
-        print error_msg + ' (Si especifica -outFile debe especificar tambien -file)'
+        print error_msg + ' (Si especifica -outFile debe especificar también -file)'
         return None
 
     if (('-file' not in resultado) and (not valor_a_convertir)):
@@ -287,13 +275,13 @@ def parse_input(comando):
             es_numero = ((char_ascii > 47) and (char_ascii < 58))
 
             if (not es_numero):
-                print error_msg + ' (Valor invalido para -baseIn)'
+                print error_msg + ' (Valor inválido para -baseIn)'
                 return None
 
         resultado['-baseIn'] = int(resultado['-baseIn'])
 
         if ((resultado['-baseIn'] < 2) or (resultado['-baseIn'] > 36)):
-            print error_msg + ' (Valor invalido para -baseIn)'
+            print error_msg + ' (Valor inválido para -baseIn)'
             return None
 
     # Validar el valor de -baseIn.
@@ -303,13 +291,13 @@ def parse_input(comando):
             es_numero = ((char_ascii > 47) and (char_ascii < 58))
 
             if (not es_numero):
-                print error_msg + ' (Valor invalido para -baseOut)'
+                print error_msg + ' (Valor inválido para -baseOut)'
                 return None
 
         resultado['-baseOut'] = int(resultado['-baseOut'])
 
         if ((resultado['-baseOut'] < 2) or (resultado['-baseOut'] > 36)):
-            print error_msg + ' (Valor invalido para -baseOut)'
+            print error_msg + ' (Valor inválido para -baseOut)'
             return None
 
     # Validar el valor a convertir
@@ -320,23 +308,21 @@ def parse_input(comando):
             es_numero = ((char_ascii > 47) and (char_ascii < 58))
 
             if ((not es_mayuscula) and (not es_numero)):
-                print error_msg + ' (Valor invalido para convertir)'
+                print error_msg + ' (Valor inválido para convertir)'
                 return None
 
             if (('-baseIn' in resultado) and (resultado['-baseIn'] < 10)):
                 if ((not es_numero) or (int(char) > resultado['-baseIn'] - 1)):
-                    print error_msg + ' (El valor a convertir posee caracteres no validos para -baseIn ' +  str(resultado['-baseIn']) + ')'
+                    print error_msg + ' (El valor a convertir posee caracteres no válidos para -baseIn ' +  str(resultado['-baseIn']) + ')'
                     return None
 
             # Si no se especifica -baseIn significa que el valor es decimal
             if ('-baseIn' not in resultado):
                 if (not es_numero):
-                    print error_msg + ' (El valor a convertir posee caracteres no validos para -baseIn 10)'
+                    print error_msg + ' (El valor a convertir posee caracteres no válidos para -baseIn 10)'
                     return None
 
     resultado['valor_a_convertir'] = valor_a_convertir
-    # print 'Resultado final:'
-    # print resultado
 
     return resultado
 
