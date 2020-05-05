@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
-
+'''
+Subrutina para convertir un decimal a binario.
+'''
 def decimal_a_binario(decimal):
     binario = ''
     dividendo = decimal
@@ -13,6 +15,12 @@ def decimal_a_binario(decimal):
     return binario
 
 
+'''
+Subrutina para convertir un valor decimal a una base X. Se le debe
+especificar la base al que se quiere convertir el valor.
+
+Se valida que la base esté entre 2 y 36.
+'''
 def decimal_a_basex(decimal, base):
     if base<2 or base > 36:
         return decimal
@@ -36,6 +44,15 @@ def decimal_a_basex(decimal, base):
     return conversion
 
 
+'''
+Subrutina para convertir un valor desde una base X a decimal. Se le
+debe especificar la base en que se encuentra el valor a convertir.
+
+Para bases mayores a 9, el valor a convertir deben contener únicamente
+números y letras mayúsculas.
+
+Se valida que la base esté entre 2 y 36.
+'''
 def basex_a_decimal(valor, base):
     if base<2 or base > 36:
         return valor
@@ -66,6 +83,15 @@ def basex_a_decimal(valor, base):
     return resultado
 
 
+'''
+Subrutina para obtener el valor de una bandera desde el comando
+ingresado por el usuario.
+
+El primer parámetro es el comando ingresado por el usuario.
+El segundo parámetro es el nombre del flag que se quiere obtener.
+El tercer parámetro es para especificar si el flag consiste en la
+dirección de un archivo (-file, -outFile).
+'''
 def obtener_valor_de_flag(comando, nombre_flag, esPath = False):
     # Si el flag no esta presente en el comando, devolver nulo.
     if nombre_flag not in comando:
@@ -97,7 +123,24 @@ def obtener_valor_de_flag(comando, nombre_flag, esPath = False):
     return valor_flag.strip()
 
 
+'''
+Procesa el comando ingresado por el usuario identificando las posibles
+banderas y sus respectivos valores. También obtiene el valor que se va
+a convertir.
 
+Esta rutina también aplica todas las validaciones necesarias para que
+un comando sea correcto. En caso de que la entrada sea inválida, retorna
+None.
+
+Devuelve un objeto con las banderas y sus valores. Además, el valor a
+convertir:
+
+valor_retornado = {
+    '-baseIn': 2,
+    '-baseOut': 8,
+    'valor_a_convertir': '101010110100'
+}
+'''
 def parse_input(comando):
     # Eliminar posibles espacios en los extremos.
     comando = comando.strip()
@@ -173,6 +216,7 @@ def parse_input(comando):
 
             continue
 
+        # Si encuentro una comilla...
         if (char == '"'):
             # Inicio de un path
             if (not comillas):
@@ -231,7 +275,7 @@ def parse_input(comando):
                 valor_a_convertir = palabra_actual or None
 
     # Despues de recorrer letrar por letra...
-
+    # print resultado
 
     flags_validos = ['-baseIn', '-baseOut', '-file', '-outFile', '-help']
 
@@ -268,7 +312,7 @@ def parse_input(comando):
         print error_msg + ' (Debe especificar un valor para convertir)'
         return None
 
-    # Validar el valor de -baseIn.
+    # Validar que el valor de -baseIn sea un numero entre 2 y 36.
     if (('-baseIn' in resultado) and (resultado['-baseIn'])):
         for char in resultado['-baseIn']:
             char_ascii = ord(char)
@@ -284,7 +328,7 @@ def parse_input(comando):
             print error_msg + ' (Valor inválido para -baseIn)'
             return None
 
-    # Validar el valor de -baseIn.
+    # Validar que el valor de -baseOut sea un numero entre 2 y 36.
     if (('-baseOut' in resultado) and resultado['-baseOut']):
         for char in resultado['-baseOut']:
             char_ascii = ord(char)
@@ -300,7 +344,7 @@ def parse_input(comando):
             print error_msg + ' (Valor inválido para -baseOut)'
             return None
 
-    # Validar el valor a convertir
+    # Validar el valor a convertir.
     if (valor_a_convertir):
         for char in valor_a_convertir:
             char_ascii = ord(char)
@@ -311,22 +355,27 @@ def parse_input(comando):
                 print error_msg + ' (Valor inválido para convertir)'
                 return None
 
+            # Los caracteres del valor a convertir deben ser únicamente valores válidos para -baseIn.
             if (('-baseIn' in resultado) and (resultado['-baseIn'] < 10)):
                 if ((not es_numero) or (int(char) > resultado['-baseIn'] - 1)):
                     print error_msg + ' (El valor a convertir posee caracteres no válidos para -baseIn ' +  str(resultado['-baseIn']) + ')'
                     return None
 
-            # Si no se especifica -baseIn significa que el valor es decimal
+            # Si no se especifica -baseIn significa que el valor es decimal.
             if ('-baseIn' not in resultado):
                 if (not es_numero):
                     print error_msg + ' (El valor a convertir posee caracteres no válidos para -baseIn 10)'
                     return None
 
     resultado['valor_a_convertir'] = valor_a_convertir
+    # print resultado
 
     return resultado
 
 
+'''
+Subrutina que imprima la ayuda sobre el uso del comando.
+'''
 def imprimir_ayuda():
     print 'Uso: convert [-flag <parametro>] [<input>]'
     print 'Lista de banderas:'
@@ -337,12 +386,19 @@ def imprimir_ayuda():
     print '    -help Muestra un listado y resumen de las banderas disponibles, adicionalmente mostrará 3 ejemplos de cómo usar las banderas y los créditos del proyecto.'
 
 
+'''
+Subrutina que imprime los créditos.
+'''
 def imprimir_creditos():
     print '<Grupo 8BN>'
     print '\tWuelmer Luis - 20005607'
     print '<Grupo 8BN>'
 
 
+'''
+Función principal que controla el flujo del programa. Consiste en un
+ciclo infinito que se rompe hasta que el usuario ingrese el comando 'quit'.
+'''
 def main():
     imprimir_creditos()
 
@@ -399,4 +455,5 @@ def main():
         print 'resultado >> ' + str(valor_convertido)
 
 
+# Llamada de la función maestra o principal. Aquí inicia el programa.
 main()
